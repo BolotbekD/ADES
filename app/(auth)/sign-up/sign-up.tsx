@@ -15,15 +15,79 @@ import CustomBotton from "@/components/CustomButton/CustomBotton";
 import { Redirect, router, Link } from "expo-router";
 import CustomCheckBox from "@/components/CustomCheckBox/CustomCheckBox";
 import { Svg, Path } from "react-native-svg";
+import { createUser } from "../../../lib/appwrite";
 
 const SignUp: FC = () => {
   const [isChecked, setIsChecked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
+    surname: "",
+    name: "",
+    phone: "",
+    city: "",
+    secondCity: "",
   });
+  const [showSecondCityField, setShowSecondCityField] = useState(false);
 
-  const submit = () => {};
+  const submit = async () => {
+    if (
+      !form.email ||
+      !form.password ||
+      !form.surname ||
+      !form.name ||
+      !form.phone ||
+      !form.city ||
+      !form.secondCity ||
+      !isChecked
+    ) {
+      setMessage("*Заполните поля");
+      return;
+    }
+
+    // setIsSubmitting(true);
+
+    try {
+      const result = await createUser(form.email, form.password, form.surname);
+      router.replace("/");
+
+      setForm({
+        email: "",
+        password: "",
+        surname: "",
+        name: "",
+        phone: "",
+        city: "",
+        secondCity: "",
+      });
+      setMessage("");
+    } catch (error) {
+      alert(`Error: ${(error as Error).message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+    setForm({
+      email: "",
+      password: "",
+      surname: "",
+      name: "",
+      phone: "",
+      city: "",
+      secondCity: "",
+    });
+  };
+
+  const cityBranches = {
+    Бишкек: ["Анкара 10B"],
+    Ош: ["Алиева 219"],
+  };
+
+  const handleCityChange = (city: string) => {
+    setForm({ ...form, city, secondCity: "" }); // Очистить выбранный филиал при изменении города
+  };
+
   return (
     <ImageBackground
       source={require("../../../assets/images/Graident_16.png")}
@@ -54,70 +118,109 @@ const SignUp: FC = () => {
             <ScrollView contentContainerStyle={styles.fullScroll}>
               <View style={styles.containerForm}>
                 <View>
-                  <View>
-                    <Text>*Заполните поля</Text>
-                  </View>
+                  {message && (
+                    <View>
+                      <Text style={styles.errorTitle}>{message}</Text>
+                    </View>
+                  )}
                   <FormField
                     title="*Фамилия"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
+                    value={form.surname}
+                    handleChangeText={(e) => setForm({ ...form, surname: e })}
+                    otherStyles={
+                      message && !form.surname
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
+                    keyboardType="default"
                     placeholder="Введите вашу фамилию"
                   />
                   <FormField
                     title="*Имя"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
+                    value={form.name}
+                    handleChangeText={(e) => setForm({ ...form, name: e })}
+                    otherStyles={
+                      message && !form.name
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
+                    keyboardType="default"
                     placeholder="Введите ваше имя"
                   />
                   <FormField
                     title="*Номер телефона"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
+                    value={form.phone}
+                    handleChangeText={(e) => setForm({ ...form, phone: e })}
+                    otherStyles={
+                      message && !form.phone
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
+                    keyboardType="phone-pad"
                     placeholder="+996(000)000-000"
                   />
                   <FormField
                     title="*Город"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
+                    value={form.city}
+                    handleChangeText={handleCityChange}
+                    otherStyles={
+                      message && !form.city
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
+                    keyboardType="default"
                     placeholder="Выберите из списка ваш город"
+                    cities={Object.keys(cityBranches)} // Передаем список городов
                   />
+
+                  {/* Поле для выбора филиала */}
+                  {form.city && (
+                    <FormField
+                      title="*Филиал"
+                      value={form.secondCity}
+                      handleChangeText={(e) =>
+                        setForm({ ...form, secondCity: e })
+                      }
+                      otherStyles={
+                        message && !form.secondCity
+                          ? {
+                              borderColor: "#f40303",
+                              borderWidth: 1,
+                            }
+                          : null
+                      }
+                      keyboardType="default"
+                      placeholder="Выберите из списка филиал"
+                      cities={
+                        cityBranches[form.city as keyof typeof cityBranches] ||
+                        []
+                      } // Передаем филиалы для выбранного города
+                    />
+                  )}
                   <FormField
                     title="*Почта"
                     value={form.email}
                     handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
-                    placeholder="example@gmail.com"
-                  />
-                  <FormField
-                    title="*Почта"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
-                    placeholder="example@gmail.com"
-                  />
-                  <FormField
-                    title="*Почта"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
-                    keyboardType="email-address"
-                    placeholder="example@gmail.com"
-                  />
-                  <FormField
-                    title="*Почта"
-                    value={form.email}
-                    handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
+                    otherStyles={
+                      message && !form.email
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
                     keyboardType="email-address"
                     placeholder="example@gmail.com"
                   />
@@ -125,20 +228,32 @@ const SignUp: FC = () => {
                     title="*Пароль"
                     value={form.password}
                     handleChangeText={(e) => setForm({ ...form, password: e })}
-                    otherStyles={{ marginTop: 5 }}
+                    otherStyles={
+                      message && !form.password
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
                     placeholder="Введите ваш пароль"
                     keyboardType="default"
                   />
+
                   <View style={styles.boxCheckBox}>
-                    <CustomCheckBox />
+                    <CustomCheckBox
+                      isChecked={isChecked}
+                      setIsChecked={setIsChecked}
+                      hasError={message !== "" && !isChecked}
+                    />
                     <Text style={styles.textCheckBox}>
-                      Нажимая вы соглашаетесь с{" "}
+                      Нажимая, вы соглашаетесь с{" "}
                       <Link style={styles.linkCheckBox} href={"/"}>
-                        политикой конфденциальности
+                        политикой конфиденциальности
                       </Link>
                     </Text>
                   </View>
-                  <CustomBotton title="Войти" handlePress={submit} />
+                  <CustomBotton title="Регистрация" handlePress={submit} />
                 </View>
               </View>
             </ScrollView>

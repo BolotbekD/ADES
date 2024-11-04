@@ -26,6 +26,7 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
     backgroundColor: "#fff",
     paddingTop: 20,
+    flex: 1,
   },
   loginBox: {
     flex: 1,
@@ -71,5 +72,11 @@ export const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 12,
     color: "#c8c8c8",
+  },
+  errorTitle: {
+    color: "#f40303",
+    fontWeight: "400",
+    fontSize: 12,
+    textAlign: "right",
   },
 });

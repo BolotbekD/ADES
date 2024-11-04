@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/images/Graident_16.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.company.ADES"
     },
     "web": {
       "bundler": "metro",

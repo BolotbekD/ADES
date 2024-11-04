@@ -1,8 +1,9 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    // marginBottom: 50,
+    // flex: 1,
   },
   inputBox: {
     width: 288,
@@ -21,21 +22,23 @@ export const styles = StyleSheet.create({
   input: {
     fontWeight: "400",
     fontSize: 14,
-    color: "#c8c8c8",
-    width: 220,
+    color: "#232323",
+    width: 230,
     height: 37,
   },
   textTitle: {
     position: "relative",
-    top: 8,
+    top: 6,
     left: 10,
     zIndex: 100,
     backgroundColor: "#fff",
-    // width: "auto",
-    padding: 4,
-    // textAlign: "left",
     fontWeight: "400",
     fontSize: 12,
     color: "#232323",
+    alignSelf: "flex-start",
+    paddingHorizontal: 4,
+  },
+  modalPicker: {
+    borderWidth: 0,
   },
 });
