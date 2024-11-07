@@ -16,12 +16,18 @@ import { Redirect, router, Link } from "expo-router";
 import { Svg, Path } from "react-native-svg";
 
 const SignIn: FC = () => {
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const submit = () => {};
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      setMessage("*Заполните поля");
+      return;
+    }
+  };
   return (
     <ImageBackground
       source={require("../../../assets/images/Graident_16.png")}
@@ -53,15 +59,23 @@ const SignIn: FC = () => {
 
               <View style={styles.containerForm}>
                 <View>
-                  <View>
-                    <Text>*Заполните поля</Text>
-                    {/* <Text>*Неверно указана почта/указан пароль</Text> */}
-                  </View>
+                  {message && (
+                    <View>
+                      <Text style={styles.errorTitle}>{message}</Text>
+                    </View>
+                  )}
                   <FormField
                     title="*Почта"
                     value={form.email}
                     handleChangeText={(e) => setForm({ ...form, email: e })}
-                    otherStyles={{ marginTop: 5 }}
+                    otherStyles={
+                      message && !form.email
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
                     keyboardType="email-address"
                     placeholder="example@gmail.com"
                   />
@@ -69,11 +83,21 @@ const SignIn: FC = () => {
                     title="*Пароль"
                     value={form.password}
                     handleChangeText={(e) => setForm({ ...form, password: e })}
-                    otherStyles={{ marginTop: 5 }}
+                    otherStyles={
+                      message && !form.password
+                        ? {
+                            borderColor: "#f40303",
+                            borderWidth: 1,
+                          }
+                        : null
+                    }
                     placeholder="Введите ваш пароль"
                     keyboardType="default"
                   />
-                  <Link style={styles.forgotPassword} href={"/home"}>
+                  <Link
+                    style={styles.forgotPassword}
+                    href={"/(auth)/forgotPassword/ForgotPassword"}
+                  >
                     Забыли пароль?
                   </Link>
                   <CustomBotton title="Войти" handlePress={submit} />

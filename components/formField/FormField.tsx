@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { FC, useState } from "react";
 import { styles } from "./style";
-import ModalPicker from "react-native-modal-picker";
+import Dropdown, { OptionItem } from "../dropDown/DropDown";
 
 export interface IFormFieldProps {
   title: string; // Исправлено на string
@@ -19,7 +19,9 @@ export interface IFormFieldProps {
   handleChangeText: (text: string) => void; // Тип функции для onChange
   otherStyles?: StyleProp<ViewStyle>; // Исправлено с "string" на StyleProp<ViewStyle>
   keyboardType?: KeyboardTypeOptions;
-  cities?: string[];
+  cities?: OptionItem[]; // Массив городов с типом OptionItem для Dropdown
+  isDropdown?: boolean;
+  options?: OptionItem[];
 }
 
 const FormField: FC<IFormFieldProps> = ({
@@ -30,44 +32,28 @@ const FormField: FC<IFormFieldProps> = ({
   otherStyles,
   keyboardType,
   cities,
+  isDropdown = false,
+  options,
   ...props
 }) => {
-  const [selectedCity, setSelectedCity] = useState(value);
+  // const [selectedCity, setSelectedCity] = useState(value);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleCitySelect = (option: { key: string; label: string }) => {
-    setSelectedCity(option.label);
-    handleChangeText(option.label);
+  const handleCitySelect = (city: OptionItem) => {
+    // setSelectedCity(city.label);
+    handleChangeText(city.label);
   };
 
-  // Преобразуем массив городов для использования в ModalPicker
-  const cityOptions =
-    cities?.map((city, index) => ({
-      key: index.toString(),
-      label: city,
-    })) || [];
-
   return (
-    <View style={[styles.container]}>
+    <View>
       <Text style={[styles.textTitle]}>{title}</Text>
       <View style={[styles.inputBox, otherStyles]}>
-        {cities ? (
-          <ModalPicker
-            data={cityOptions}
-            initValue={placeholder}
+        {isDropdown && cities ? (
+          <Dropdown
+            data={cities}
             onChange={handleCitySelect}
-            style={styles.modalPicker}
-          >
-            <TouchableOpacity>
-              <TextInput
-                style={styles.input}
-                placeholder={placeholder}
-                placeholderTextColor="#c8c8c8"
-                value={selectedCity}
-                editable={false} // Поле недоступно для редактирования, так как оно открывает модальное окно
-              />
-            </TouchableOpacity>
-          </ModalPicker>
+            placeholder={placeholder}
+          />
         ) : (
           <TextInput
             value={value}

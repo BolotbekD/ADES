@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "../../../components/formField/FormField";
 import { styles } from "./style";
@@ -28,9 +28,26 @@ const SignUp: FC = () => {
     name: "",
     phone: "",
     city: "",
-    secondCity: "",
+    branch: "",
   });
-  const [showSecondCityField, setShowSecondCityField] = useState(false);
+
+  const cityOptions = [
+    { value: "Бишкек", label: "Бишкек" },
+    { value: "Ош", label: "Ош" },
+  ];
+
+  const branchOptions: {
+    [key: string]: { value: string; label: string }[];
+  } = {
+    Бишкек: [
+      { value: "Анкара 10B", label: "Анкара 10B" },
+      // Другие филиалы
+    ],
+    Ош: [
+      { value: "Алиева 219", label: "Алиева 219" },
+      // Другие филиалы
+    ],
+  };
 
   const submit = async () => {
     if (
@@ -40,53 +57,66 @@ const SignUp: FC = () => {
       !form.name ||
       !form.phone ||
       !form.city ||
-      !form.secondCity ||
+      !form.branch ||
       !isChecked
     ) {
       setMessage("*Заполните поля");
       return;
     }
-
+    if (form.password.length < 6) {
+      setMessage("*Пароль должен содержать не менее 6 символов");
+    }
+    router.replace("/(auth)/confirmCode/ConfirmCode");
     // setIsSubmitting(true);
 
-    try {
-      const result = await createUser(form.email, form.password, form.surname);
-      router.replace("/");
+    // try {
+    //   const result = await createUser(form.email, form.password, form.surname);
+    //   router.replace("/");
 
-      setForm({
-        email: "",
-        password: "",
-        surname: "",
-        name: "",
-        phone: "",
-        city: "",
-        secondCity: "",
-      });
-      setMessage("");
-    } catch (error) {
-      alert(`Error: ${(error as Error).message}`);
-    } finally {
-      setIsSubmitting(false);
-    }
-    setForm({
-      email: "",
-      password: "",
-      surname: "",
-      name: "",
-      phone: "",
-      city: "",
-      secondCity: "",
+    //   setForm({
+    //     email: "",
+    //     password: "",
+    //     surname: "",
+    //     name: "",
+    //     phone: "",
+    //     city: "",
+    //     branch: "",
+    //   });
+    //   setMessage("");
+    // } catch (error) {
+    //   alert(`Error: ${(error as Error).message}`);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
+    // setForm({
+    //   email: "",
+    //   password: "",
+    //   surname: "",
+    //   name: "",
+    //   phone: "",
+    //   city: "",
+    //   branch: "",
+    // });
+  };
+
+  // const handleCityChange = (text: string) => {
+  //   setForm((prevForm) => ({ ...prevForm, city: text, branch: "" }));
+  // };
+
+  const handleCityChange = (text: string) => {
+    console.log("Выбран город:", text);
+    setForm((prevForm) => {
+      const updatedForm = { ...prevForm, city: text, branch: "" };
+      console.log("Форма после обновления:", updatedForm);
+      return updatedForm;
     });
   };
-
-  const cityBranches = {
-    Бишкек: ["Анкара 10B"],
-    Ош: ["Алиева 219"],
-  };
-
-  const handleCityChange = (city: string) => {
-    setForm({ ...form, city, secondCity: "" }); // Очистить выбранный филиал при изменении города
-  };
+  // useEffect(() => {
+  //   console.log("Состояние формы изменилось:", form);
+  // }, [form]);
+  // useEffect(() => {
+  //   console.log("Текущий филиал:", form.branch);
+  // }, [form.branch]);
 
   return (
     <ImageBackground
@@ -174,39 +204,34 @@ const SignUp: FC = () => {
                     handleChangeText={handleCityChange}
                     otherStyles={
                       message && !form.city
-                        ? {
-                            borderColor: "#f40303",
-                            borderWidth: 1,
-                          }
+                        ? { borderColor: "#f40303", borderWidth: 1 }
                         : null
                     }
                     keyboardType="default"
                     placeholder="Выберите из списка ваш город"
-                    cities={Object.keys(cityBranches)} // Передаем список городов
+                    cities={cityOptions}
+                    isDropdown
                   />
-
-                  {/* Поле для выбора филиала */}
                   {form.city && (
                     <FormField
                       title="*Филиал"
-                      value={form.secondCity}
-                      handleChangeText={(e) =>
-                        setForm({ ...form, secondCity: e })
+                      value={form.branch}
+                      handleChangeText={(branch) =>
+                        setForm((prev) => ({ ...prev, branch }))
                       }
                       otherStyles={
-                        message && !form.secondCity
-                          ? {
-                              borderColor: "#f40303",
-                              borderWidth: 1,
-                            }
+                        message && !form.branch
+                          ? { borderColor: "#f40303", borderWidth: 1 }
                           : null
                       }
                       keyboardType="default"
-                      placeholder="Выберите из списка филиал"
-                      cities={
-                        cityBranches[form.city as keyof typeof cityBranches] ||
-                        []
-                      } // Передаем филиалы для выбранного города
+                      placeholder={
+                        form.city
+                          ? "Выберите из списка ваш филиал"
+                          : "Выберите город сначала"
+                      }
+                      cities={branchOptions[form.city] || []}
+                      isDropdown
                     />
                   )}
                   <FormField

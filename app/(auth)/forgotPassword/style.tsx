@@ -62,4 +62,15 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "right",
   },
+  textTitle: {
+    fontWeight: "400",
+    fontSize: 12,
+    textAlign: "center",
+    color: " #737373",
+    width: 288,
+    marginBottom: 5,
+  },
+  emailText: {
+    color: "#232323",
+  },
 });

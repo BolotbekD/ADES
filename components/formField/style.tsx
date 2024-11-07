@@ -1,10 +1,6 @@
 import { StyleSheet, Platform } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: {
-    // marginBottom: 50,
-    // flex: 1,
-  },
   inputBox: {
     width: 288,
     height: 37,
@@ -37,8 +33,5 @@ export const styles = StyleSheet.create({
     color: "#232323",
     alignSelf: "flex-start",
     paddingHorizontal: 4,
-  },
-  modalPicker: {
-    borderWidth: 0,
   },
 });

@@ -62,4 +62,50 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "right",
   },
+  textTitle: {
+    fontWeight: "400",
+    fontSize: 12,
+    textAlign: "center",
+    color: " #737373",
+    width: 288,
+    marginBottom: 5,
+  },
+  emailText: {
+    color: "#232323",
+  },
+  cell: {
+    marginTop: 35,
+    marginBottom: 20,
+  },
+  timer: {
+    fontWeight: "400",
+    fontSize: 14,
+    textAlign: "center",
+    color: "#232323",
+    marginBottom: 25,
+  },
+  // otpText: {
+  //   marginTop: 20,
+  //   fontSize: 16,
+  // },
+  otpContainer: {
+    width: 288,
+    marginBottom: 20,
+    marginTop: 35,
+  },
+  pinCodeContainer: {
+    width: 60,
+    height: 55,
+    backgroundColor: "#fffffa",
+    borderColor: "#c8c8c8",
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  resetText: {
+    fontWeight: "500",
+    fontSize: 14,
+    textAlign: "center",
+    color: "#5eb147",
+    marginBottom: 25,
+  },
 });

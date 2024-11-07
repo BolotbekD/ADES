@@ -6,20 +6,24 @@ import { FC } from "react";
 export interface ICustomButton {
   title: string; // Заголовок кнопки
   handlePress: () => void; // Функция для обработки нажатия
+  buttonStyle?: object;
   textStyles?: object; // Необязательные стили текста
   isLoading?: boolean; // Необязательное свойство для состояния загрузки
+  Disabled?: boolean;
 }
 
 const CustomButton: FC<ICustomButton> = ({
   title,
   handlePress,
   textStyles,
+  buttonStyle,
   isLoading,
+  Disabled,
 }) => {
   return (
     <TouchableOpacity
       onPress={handlePress}
-      style={styles.btnLogin}
+      style={[styles.btnLogin, buttonStyle]}
       disabled={isLoading}
     >
       {isLoading ? (

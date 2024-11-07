@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import CustomBotton from "../components/CustomButton/CustomBotton";
 import { Redirect, router, Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -18,7 +18,7 @@ const App = () => {
       resizeMode="cover"
     >
       <SafeAreaView style={styles.fullBackground}>
-        <ScrollView contentContainerStyle={{ height: "100%" }}>
+        <ScrollView contentContainerStyle={{ flex: 1 }}>
           <View style={styles.container}>
             <Image
               style={styles.logo}
@@ -32,7 +32,13 @@ const App = () => {
               <CustomBotton
                 title="Регистрация"
                 handlePress={() => router.push("/(auth)/sign-up/sign-up")}
-                style={styles.btnRegistration}
+                buttonStyle={{
+                  backgroundColor: "#fffffa",
+                  borderWidth: 1,
+                  bordeStyle: "solid",
+                  borderColor: "#5eb147",
+                }}
+                textStyles={{ color: "#232323" }}
               />
             </View>
           </View>
@@ -62,6 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     height: "100%",
+    flex: 1,
   },
   btns: {
     width: "100%",
@@ -71,6 +78,6 @@ const styles = StyleSheet.create({
   btnRegistration: {
     borderWidth: 1,
     borderColor: "#90EE90",
-    backgroundColor: "#FFF",
+    backgroundColor: "#fffffa",
   },
 });
